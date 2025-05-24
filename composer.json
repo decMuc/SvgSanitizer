@@ -1,5 +1,5 @@
 {
-  "name": "decMuc/svg-sanitizer",
+  "name": "decMuc/SvgSanitizer",
   "description": "A lightweight PHP library to validate and block unsafe SVG content, preventing XSS and code injection.",
   "type": "library",
   "license": "MIT",
