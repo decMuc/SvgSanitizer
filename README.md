@@ -17,7 +17,7 @@
 Use Composer to add the package:
 
 ```bash
-composer require decmuc/svg-sanitizer
+composer require decMuc/SvgSanitizer
 ```
 
 ### Deutsch
@@ -25,7 +25,7 @@ composer require decmuc/svg-sanitizer
 Füge die Bibliothek über Composer hinzu:
 
 ```bash
-composer require decmuc/svg-sanitizer
+composer require decMuc/SvgSanitizer
 ```
 
 ## ⚙️ Autoloading
