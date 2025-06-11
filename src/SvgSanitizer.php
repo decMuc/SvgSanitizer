@@ -13,6 +13,15 @@ final class SvgSanitizer
      */
     public static function isSafe(string $content): array
     {
+        // Prüfen, ob es sich überhaupt um ein SVG handelt
+        if (stripos($content, '<svg') === false) {
+            return [
+                'status' => false,
+                'svg' => '',
+                'msg' => 'No <svg> tag found'
+            ];
+        }
+
         // 1. Kurze Exploit-Pattern-Prüfung (Blacklist)
         $str = strtolower(preg_replace('/\s+/', '', $content));
         $dangerousPatterns = [
