@@ -59,7 +59,7 @@ final class SvgSanitizer
 
         // 2. Jetzt DOM-Whitelist-Prüfung und -Filterung
         $cleanSvg = self::sanitizeSvg($content);
-        if (!$cleanSvg) {
+        if ($cleanSvg) {
             return [
                 'status' => true,
                 'svg' => $cleanSvg,
