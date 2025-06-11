@@ -61,30 +61,44 @@ use decMuc\SvgSanitizer\SvgSanitizer;
 // SVG-Datei einlesen
 $svg = file_get_contents('upload/logo.svg');
 
-// Sicherheitsprüfung durchführen
-if (SvgSanitizer::isSafe($svg)) {
+// Sicherheitsprüfung & Reinigung durchführen
+$result = SvgSanitizer::isSafe($svg);
+if ($result['status']) {
     // SVG kann sicher weiterverarbeitet werden
+    file_put_contents("cleaned.svg", $result['svg']);
     echo 'SVG ist sicher!';
 } else {
     // Datei ablehnen oder protokollieren
-    echo 'Verdächtiger SVG-Inhalt erkannt!';
+    echo $result['msg'];
 }
 ```
 
 ## 🔧 Methods / Methoden
 
-* **English**: `SvgSanitizer::isSafe(string $svg): bool` – Returns `true` if the SVG contains no potentially harmful elements.
-* **Deutsch**: `SvgSanitizer::isSafe(string $svg): bool` – Gibt `true` zurück, wenn das SVG keine potenziell schädlichen Elemente enthält.
+* **English**: 
+* `SvgSanitizer::isSafe(string $svg): array` –  
+  Returns `['status' => true, 'svg' => cleaned SVG, 'msg' => '']` if the SVG is clean, or `['status' => false, 'svg' => '', 'msg' => error message]` if suspicious patterns or errors are found.
 
+* **Deutsch**: 
+* `SvgSanitizer::isSafe(string $svg): array` –
+  Gibt ein Array zurück: `['status' => true, 'svg' => bereinigtes SVG, 'msg' => '']` wenn das SVG sauber ist,
+  oder `['status' => false, 'svg' => '', 'msg' => Fehlermeldung]` wenn verdächtige Patterns oder Fehler gefunden wurden.
+ 
 ## ⚠️ Example Error Handling / Beispielhafte Fehlermeldungen
 
 ### English
 
-If the check fails, you can reject the SVG, log the incident, or sanitize the content.
+SvgSanitizer checks SVG content on three levels:
+First, known exploit patterns are reliably detected and immediately blocked using a blacklist. Next, the SVG is validated and cleaned based on a strict whitelist of allowed tags and attributes. Finally, special rules are applied to styles and embedded data to eliminate hidden risks.
+
+Only SVGs that pass all checks are accepted and returned.
 
 ### Deutsch
 
-Sollte die Prüfung fehlschlagen, kann man das SVG ablehnen, protokollieren oder bereinigen.
+SvgSanitizer prüft SVG-Inhalte auf drei Ebenen:
+Zunächst werden bekannte Exploit-Muster mit einer Blacklist zuverlässig erkannt und sofort blockiert. Anschließend wird das SVG anhand einer strengen Whitelist zulässiger Tags und Attribute geprüft und bereinigt. Abschließend werden spezielle Regeln auf Styles und eingebettete Daten angewendet, um auch versteckte Gefahrenquellen auszuschließen.
+
+Nur SVGs, die alle Prüfungen bestehen, werden akzeptiert und ausgegeben.
 
 ## 📝 License / Lizenz
 

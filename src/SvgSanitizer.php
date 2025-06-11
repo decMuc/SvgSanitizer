@@ -11,9 +11,9 @@ final class SvgSanitizer
      * @param string $content
      * @return bool
      */
-    public static function isSafe(string $content): bool
+    public static function isSafe(string $content): array
     {
-        // 1. Schnelle Exploit-Pattern-Prüfung (Blacklist)
+        // 1. Kurze Exploit-Pattern-Prüfung (Blacklist)
         $str = strtolower(preg_replace('/\s+/', '', $content));
         $dangerousPatterns = [
             '/<script.*?>/i',
@@ -40,14 +40,28 @@ final class SvgSanitizer
         ];
         foreach ($dangerousPatterns as $pattern) {
             if (preg_match($pattern, $str)) {
-                return false;
+                return [
+                    'status' => false,
+                    'svg' => '',
+                    'msg' => 'Blacklist pattern detected'
+                ];
             }
         }
 
         // 2. Jetzt DOM-Whitelist-Prüfung und -Filterung
         $cleanSvg = self::sanitizeSvg($content);
-        if (!$cleanSvg) return false;
-        return true;
+        if (!$cleanSvg) {
+            return [
+                'status' => true,
+                'svg' => $cleanSvg,
+                'msg' => ''
+            ];
+        }
+        return [
+            'status' => false,
+            'svg' => '',
+            'msg' => 'SVG could not be sanitized'
+        ];
     }
 
     /**
@@ -163,7 +177,7 @@ final class SvgSanitizer
 
     /**
      * Prüft, ob ein href/xlink:href safe ist.
-     * Erlaubt: data:image/png|jpeg|gif;base64,... ODER relative URLs.
+     * Erlaubt: data:image/png|jpeg|gif|webp|avif;base64,... ODER relative URLs.
      * Verbietet: javascript:, data:image/svg+xml, http(s)://...
      */
     private static function isSafeHref($href)
