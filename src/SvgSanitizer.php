@@ -13,7 +13,7 @@ final class SvgSanitizer
      */
     public static function isSafe(string $content): array
     {
-        // Prüfen, ob es sich überhaupt um ein SVG handelt
+        // Prüfen, ob es sich überhaupt um ein SVG handelt 
         if (stripos($content, '<svg') === false) {
             return [
                 'status' => false,
